@@ -8,7 +8,7 @@ your speech and helps you improve over time.
 - CTO: Saharsh
 - CPO: Sahan
 - Head of AI: Sparsh
-- Lead Web Architect: Darsh
+- Lead Web Architect: Darsh Patel
 - Head of Marketing: Sahil
 - Head of Data & Analytics: Raghav
 - Chief R&D: Crank
