@@ -4,14 +4,14 @@ An AI-powered public speaking coach that analyzes
 your speech and helps you improve over time.
 
 ## Team
-- CEO: Aadi
-- CTO: Saharsh
-- CPO: Sahan
-- Head of AI: Sparsh
+- CEO: Aaditya Bhagat
+- CTO: Saharsh Bhaskarla
+- CPO: Sahan Phadnis
+- Head of AI: Sparsh Pal
 - Lead Web Architect: Darsh Patel
-- Head of Marketing: Sahil
-- Head of Data & Analytics: Raghav
-- Chief R&D: Crank
+- Head of Marketing: Sahil Mathur
+- Head of Data & Analytics: Raghav Rao
+- Chief R&D: Sankeerth Malasandram
 
 ## MVP Goal
 Recording → Whisper Transcription → Filler Word Detection 
