@@ -219,3 +219,8 @@ __marimo__/
 
 
 .env
+
+*.wav
+*.webm
+*.m4a
+temp_audio*
