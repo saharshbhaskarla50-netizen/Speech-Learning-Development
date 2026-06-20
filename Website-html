@@ -1,49 +1,561 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Feedn</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpeakLab — AI Speech Coach</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            padding-top: 100px;
-        }
+    :root {
+      --bg:       #0a0a0f;
+      --surface:  #13131a;
+      --border:   #1f1f2e;
+      --accent:   #7c5cfc;
+      --accent2:  #c084fc;
+      --danger:   #f43f5e;
+      --text:     #e8e8f0;
+      --muted:    #5a5a72;
+      --success:  #34d399;
+    }
 
-        h1 {
-            color: #333;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        p {
-            color: #666;
-            font-size: 18px;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 80px;
+    }
 
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
+    header {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 56px;
+    }
 
-        a:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span { color: var(--accent2); }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 32px;
+    }
+
+    .duration-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .dur-btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .dur-btn:hover { border-color: var(--accent); color: var(--text); }
+    .dur-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .record-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .record-btn {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 0 0 0 rgba(124, 92, 252, 0.4);
+      position: relative;
+    }
+
+    .record-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 12px rgba(124, 92, 252, 0.15);
+    }
+
+    .record-btn.recording {
+      background: linear-gradient(135deg, var(--danger), #fb7185);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0  rgba(244, 63, 94, 0.5); }
+      70%  { box-shadow: 0 0 0 18px rgba(244, 63, 94, 0); }
+      100% { box-shadow: 0 0 0 0  rgba(244, 63, 94, 0); }
+    }
+
+    .record-btn svg { width: 36px; height: 36px; fill: #fff; }
+
+    .stop-icon {
+      width: 28px; height: 28px;
+      background: #fff;
+      border-radius: 4px;
+    }
+
+    #status-text {
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.2px;
+    }
+
+    #timer {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: var(--danger);
+      display: none;
+    }
+
+    .waveform {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 36px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .waveform.active { opacity: 1; }
+
+    .bar {
+      width: 4px;
+      background: linear-gradient(to top, var(--accent), var(--accent2));
+      border-radius: 2px;
+      animation: wave 0.8s ease-in-out infinite;
+    }
+
+    .bar:nth-child(1) { animation-delay: 0.0s; }
+    .bar:nth-child(2) { animation-delay: 0.1s; }
+    .bar:nth-child(3) { animation-delay: 0.2s; }
+    .bar:nth-child(4) { animation-delay: 0.3s; }
+    .bar:nth-child(5) { animation-delay: 0.4s; }
+    .bar:nth-child(6) { animation-delay: 0.3s; }
+    .bar:nth-child(7) { animation-delay: 0.2s; }
+    .bar:nth-child(8) { animation-delay: 0.1s; }
+    .bar:nth-child(9) { animation-delay: 0.0s; }
+
+    @keyframes wave {
+      0%, 100% { height: 8px;  }
+      50%       { height: 28px; }
+    }
+
+    #loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 24px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 32px; height: 32px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #results { display: none; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .stat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .score-value  { color: var(--accent2); }
+    .wpm-value    { color: var(--success); }
+    .filler-value { color: var(--danger);  }
+
+    .score-bar-wrap {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      margin: 8px 0 2px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 3px;
+      transition: width 0.8s cubic-bezier(.16,1,.3,1);
+    }
+
+    .result-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 14px;
+    }
+
+    .result-block-title {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .result-block p {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .feedback-tips p {
+      padding: 10px 14px;
+      border-left: 2px solid var(--accent);
+      margin-bottom: 8px;
+      font-size: 14px;
+      background: rgba(124, 92, 252, 0.06);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .try-again-btn {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .try-again-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    #error-msg {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      border-radius: 10px;
+      color: #fb7185;
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Welcome to AI Feedback</h1>
-    <p>This is the content of the new page.</p>
+<header>
+  <div class="logo-mark">🎤</div>
+  <div class="logo-text">Speak<span>Lab</span></div>
+</header>
 
-    <a href="index.html">Back to Home</a>
-    <a href="newpage.html">AI Feedback</a>
+<div class="card">
+  <div class="section-label">Session</div>
+  <h2>Record your speech</h2>
+  <p class="subtitle">Pick a duration, hit record, and get instant AI coaching feedback.</p>
 
+  <div class="section-label">Duration</div>
+  <div class="duration-row" id="dur-row">
+    <button class="dur-btn" data-sec="15">15s</button>
+    <button class="dur-btn active" data-sec="30">30s</button>
+    <button class="dur-btn" data-sec="60">1 min</button>
+    <button class="dur-btn" data-sec="90">90s</button>
+    <button class="dur-btn" data-sec="120">2 min</button>
+  </div>
+
+  <div class="record-area">
+    <div class="waveform" id="waveform">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+
+    <button class="record-btn" id="record-btn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 1a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V5a4 4 0 0 1 4-4zm-6.5 9a.5.5 0 0 1 .5.5 6 6 0 0 0 12 0 .5.5 0 0 1 1 0 7 7 0 0 1-6.5 6.96V20h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.54A7 7 0 0 1 5 10.5a.5.5 0 0 1 .5-.5z"/>
+      </svg>
+    </button>
+
+    <div id="status-text">Tap to start recording</div>
+    <div id="timer"></div>
+  </div>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    <span>Transcribing and analyzing your speech…</span>
+  </div>
+
+  <div id="error-msg"></div>
+
+  <div id="results">
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-value score-value" id="res-score">—</div>
+        <div class="score-bar-wrap"><div class="score-bar-fill" id="score-bar" style="width:0%"></div></div>
+        <div class="stat-label">Score / 100</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value wpm-value" id="res-wpm">—</div>
+        <div class="stat-label">Words / Min</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value filler-value" id="res-fillers">—</div>
+        <div class="stat-label">Filler Words</div>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-block-title">Transcript</div>
+      <p id="res-transcript"></p>
+    </div>
+
+    <div class="result-block feedback-tips">
+      <div class="result-block-title">Coaching Tips</div>
+      <div id="res-feedback"></div>
+    </div>
+
+    <button class="try-again-btn" id="try-again-btn">Record another →</button>
+  </div>
+</div>
+
+<footer>Powered by Whisper + GPT-4o mini</footer>
+
+<script>
+  const BACKEND_URL = "http://localhost:5000/analyze";
+
+  let selectedDuration = 30;
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let isRecording = false;
+  let timerInterval = null;
+  let timeLeft = 0;
+
+  const recordBtn   = document.getElementById("record-btn");
+  const statusText  = document.getElementById("status-text");
+  const timerEl     = document.getElementById("timer");
+  const waveform    = document.getElementById("waveform");
+  const loadingEl   = document.getElementById("loading");
+  const resultsEl   = document.getElementById("results");
+  const errorEl     = document.getElementById("error-msg");
+  const durRow      = document.getElementById("dur-row");
+  const tryAgainBtn = document.getElementById("try-again-btn");
+
+  durRow.querySelectorAll(".dur-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (isRecording) return;
+      durRow.querySelectorAll(".dur-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedDuration = parseInt(btn.dataset.sec);
+    });
+  });
+
+  recordBtn.addEventListener("click", async () => {
+    if (isRecording) { stopRecording(); } else { await startRecording(); }
+  });
+
+  async function startRecording() {
+    hideError(); hideResults();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = handleRecordingDone;
+      mediaRecorder.start();
+
+      isRecording = true;
+      recordBtn.classList.add("recording");
+      recordBtn.innerHTML = `<div class="stop-icon"></div>`;
+      waveform.classList.add("active");
+      statusText.textContent = "Recording… tap to stop early";
+      timerEl.style.display = "block";
+
+      timeLeft = selectedDuration;
+      updateTimer();
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimer();
+        if (timeLeft <= 0) stopRecording();
+      }, 1000);
+    } catch (err) {
+      showError("Microphone access denied. Please allow mic access and try again.");
+    }
+  }
+
+  function stopRecording() {
+    if (!mediaRecorder) return;
+    clearInterval(timerInterval);
+    mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach(t => t.stop());
+    isRecording = false;
+    recordBtn.classList.remove("recording");
+    recordBtn.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V5a4 4 0 0 1 4-4zm-6.5 9a.5.5 0 0 1 .5.5 6 6 0 0 0 12 0 .5.5 0 0 1 1 0 7 7 0 0 1-6.5 6.96V20h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.54A7 7 0 0 1 5 10.5a.5.5 0 0 1 .5-.5z"/></svg>`;
+    waveform.classList.remove("active");
+    timerEl.style.display = "none";
+    statusText.textContent = "Processing…";
+  }
+
+  function updateTimer() {
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    timerEl.textContent = `${m}:${String(s).padStart(2, "0")} remaining`;
+  }
+
+  async function handleRecordingDone() {
+    const blob = new Blob(audioChunks, { type: "audio/webm" });
+    const actualDuration = selectedDuration - timeLeft || selectedDuration;
+    statusText.textContent = "Tap to start recording";
+    loadingEl.style.display = "flex";
+
+    const formData = new FormData();
+    formData.append("audio", blob, "recording.webm");
+    formData.append("duration", actualDuration);
+
+    try {
+      const res = await fetch(BACKEND_URL, { method: "POST", body: formData });
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+      const data = await res.json();
+      loadingEl.style.display = "none";
+      showResults(data);
+    } catch (err) {
+      loadingEl.style.display = "none";
+      showError(`Couldn't reach the backend. Make sure Flask is running on port 5000. (${err.message})`);
+      statusText.textContent = "Tap to start recording";
+    }
+  }
+
+  function showResults(data) {
+    document.getElementById("res-score").textContent   = data.score ?? "—";
+    document.getElementById("res-wpm").textContent     = data.wpm   ?? "—";
+    document.getElementById("res-fillers").textContent = data.filler_count ?? "—";
+    document.getElementById("res-transcript").textContent = data.transcript ?? "";
+
+    setTimeout(() => {
+      document.getElementById("score-bar").style.width = (data.score || 0) + "%";
+    }, 100);
+
+    const feedbackEl = document.getElementById("res-feedback");
+    feedbackEl.innerHTML = "";
+    const tips = (data.feedback || "").split(/\n/).filter(l => l.trim());
+    tips.forEach(tip => {
+      const p = document.createElement("p");
+      p.textContent = tip.replace(/^\d+\.\s*/, "");
+      feedbackEl.appendChild(p);
+    });
+
+    resultsEl.style.display = "block";
+  }
+
+  function hideResults() { resultsEl.style.display = "none"; }
+
+  tryAgainBtn.addEventListener("click", () => { hideResults(); hideError(); statusText.textContent = "Tap to start recording"; });
+
+  function showError(msg) { errorEl.textContent = msg; errorEl.style.display = "block"; }
+  function hideError() { errorEl.style.display = "none"; }
+</script>
 </body>
 </html>
+```
