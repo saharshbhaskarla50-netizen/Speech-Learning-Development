@@ -424,7 +424,7 @@
 <footer>Powered by Whisper + GPT-4o mini</footer>
 
 <script>
-  const BACKEND_URL = "http://localhost:5000/analyze";
+  const BACKEND_URL = "https://speech-learning-development-42tk.onrender.com/analyze";
 
   let selectedDuration = 30;
   let mediaRecorder = null;
