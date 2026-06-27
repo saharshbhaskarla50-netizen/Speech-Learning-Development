@@ -49,12 +49,7 @@
       font-size: 18px;
     }
 
-    .logo-text {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
+    .logo-text { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
     .logo-text span { color: var(--accent2); }
 
     .card {
@@ -75,25 +70,10 @@
       margin-bottom: 10px;
     }
 
-    h2 {
-      font-size: 26px;
-      font-weight: 600;
-      letter-spacing: -0.5px;
-      margin-bottom: 6px;
-    }
+    h2 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .subtitle { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
 
-    .subtitle {
-      color: var(--muted);
-      font-size: 15px;
-      margin-bottom: 32px;
-    }
-
-    .duration-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 32px;
-      flex-wrap: wrap;
-    }
+    .duration-row { display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; }
 
     .dur-btn {
       padding: 8px 18px;
@@ -106,14 +86,8 @@
       cursor: pointer;
       transition: all 0.15s;
     }
-
     .dur-btn:hover { border-color: var(--accent); color: var(--text); }
-    .dur-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-      font-weight: 600;
-    }
+    .dur-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
 
     .record-area {
       display: flex;
@@ -134,12 +108,7 @@
       box-shadow: 0 0 0 0 rgba(124, 92, 252, 0.4);
       position: relative;
     }
-
-    .record-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 0 12px rgba(124, 92, 252, 0.15);
-    }
-
+    .record-btn:hover { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(124, 92, 252, 0.15); }
     .record-btn.recording {
       background: linear-gradient(135deg, var(--danger), #fb7185);
       animation: pulse 1.4s ease-in-out infinite;
@@ -152,34 +121,12 @@
     }
 
     .record-btn svg { width: 36px; height: 36px; fill: #fff; }
+    .stop-icon { width: 28px; height: 28px; background: #fff; border-radius: 4px; }
 
-    .stop-icon {
-      width: 28px; height: 28px;
-      background: #fff;
-      border-radius: 4px;
-    }
+    #status-text { font-size: 14px; color: var(--muted); letter-spacing: 0.2px; }
+    #timer { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--danger); display: none; }
 
-    #status-text {
-      font-size: 14px;
-      color: var(--muted);
-      letter-spacing: 0.2px;
-    }
-
-    #timer {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      color: var(--danger);
-      display: none;
-    }
-
-    .waveform {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      height: 36px;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
+    .waveform { display: flex; align-items: center; gap: 3px; height: 36px; opacity: 0; transition: opacity 0.3s; }
     .waveform.active { opacity: 1; }
 
     .bar {
@@ -188,7 +135,6 @@
       border-radius: 2px;
       animation: wave 0.8s ease-in-out infinite;
     }
-
     .bar:nth-child(1) { animation-delay: 0.0s; }
     .bar:nth-child(2) { animation-delay: 0.1s; }
     .bar:nth-child(3) { animation-delay: 0.2s; }
@@ -199,10 +145,7 @@
     .bar:nth-child(8) { animation-delay: 0.1s; }
     .bar:nth-child(9) { animation-delay: 0.0s; }
 
-    @keyframes wave {
-      0%, 100% { height: 8px;  }
-      50%       { height: 28px; }
-    }
+    @keyframes wave { 0%, 100% { height: 8px; } 50% { height: 28px; } }
 
     #loading {
       display: none;
@@ -221,7 +164,6 @@
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
     #results { display: none; }
@@ -249,25 +191,12 @@
       margin-bottom: 6px;
     }
 
-    .stat-label {
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
+    .stat-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
     .score-value  { color: var(--accent2); }
     .wpm-value    { color: var(--success); }
-    .filler-value { color: var(--danger);  }
+    .filler-value { color: var(--danger); }
 
-    .score-bar-wrap {
-      height: 6px;
-      background: var(--border);
-      border-radius: 3px;
-      margin: 8px 0 2px;
-      overflow: hidden;
-    }
-
+    .score-bar-wrap { height: 6px; background: var(--border); border-radius: 3px; margin: 8px 0 2px; overflow: hidden; }
     .score-bar-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
@@ -291,47 +220,58 @@
       margin-bottom: 10px;
     }
 
-    .result-block p {
-      font-size: 15px;
-      line-height: 1.65;
-      color: var(--text);
-    }
+    .result-block p { font-size: 15px; line-height: 1.65; color: var(--text); }
 
-    .tip-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-bottom: 10px;
-      transition: border-color 0.15s;
-    }
-
-    .tip-card:hover { border-color: var(--accent); }
-
-    .tip-num {
-      min-width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 8px;
+    /* ── Feedback section navigator ── */
+    .feedback-header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-      flex-shrink: 0;
+      justify-content: space-between;
+      margin-bottom: 18px;
     }
 
-    .tip-text {
+    .nav-arrow {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .nav-arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .nav-arrow:disabled { opacity: 0.25; cursor: not-allowed; }
+
+    .section-meta { text-align: center; }
+    .section-title { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+    .section-counter { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .nav-dots { display: flex; gap: 6px; justify-content: center; margin-top: 16px; }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .dot.active { background: var(--accent); transform: scale(1.3); }
+
+    .tip-item {
       font-size: 14px;
       line-height: 1.65;
       color: var(--text);
-      padding-top: 3px;
+      padding: 13px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      transition: border-color 0.15s;
     }
+    .tip-item:hover { border-color: var(--accent); }
+    #section-content { min-height: 80px; }
 
     .try-again-btn {
       width: 100%;
@@ -347,11 +287,7 @@
       cursor: pointer;
       transition: all 0.15s;
     }
-
-    .try-again-btn:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
+    .try-again-btn:hover { background: var(--accent); border-color: var(--accent); }
 
     #error-msg {
       display: none;
@@ -364,16 +300,8 @@
       font-size: 14px;
     }
 
-    footer {
-      margin-top: 40px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    #chat-section {
-      display: none;
-      margin-top: 28px;
-    }
+    /* ── Chat ── */
+    #chat-section { display: none; margin-top: 28px; }
 
     #chat-messages {
       background: var(--bg);
@@ -388,12 +316,7 @@
       margin-bottom: 12px;
     }
 
-    .chat-row {
-      display: flex;
-      flex-direction: column;
-      max-width: 85%;
-    }
-
+    .chat-row { display: flex; flex-direction: column; max-width: 85%; }
     .chat-row.user { align-self: flex-end; }
     .chat-row.coach { align-self: flex-start; }
 
@@ -424,10 +347,7 @@
       margin-bottom: 4px;
     }
 
-    .chat-input-row {
-      display: flex;
-      gap: 10px;
-    }
+    .chat-input-row { display: flex; gap: 10px; }
 
     #chat-input {
       flex: 1;
@@ -441,7 +361,6 @@
       outline: none;
       transition: border-color 0.15s;
     }
-
     #chat-input:focus { border-color: var(--accent); }
 
     #chat-send {
@@ -456,8 +375,9 @@
       cursor: pointer;
       transition: opacity 0.15s;
     }
-
     #chat-send:hover { opacity: 0.85; }
+
+    footer { margin-top: 40px; font-size: 12px; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -528,8 +448,17 @@
     </div>
 
     <div class="result-block">
-      <div class="result-block-title">Coaching Tips</div>
-      <div id="res-feedback"></div>
+      <div class="result-block-title">Feedback</div>
+      <div class="feedback-header">
+        <button class="nav-arrow" id="prev-section" disabled>&#8592;</button>
+        <div class="section-meta">
+          <div class="section-title" id="section-title">Tips</div>
+          <div class="section-counter" id="section-counter">1 of 4</div>
+        </div>
+        <button class="nav-arrow" id="next-section">&#8594;</button>
+      </div>
+      <div id="section-content"></div>
+      <div class="nav-dots" id="nav-dots"></div>
     </div>
 
     <button class="try-again-btn" id="try-again-btn">Record another →</button>
@@ -542,7 +471,6 @@
         <button id="chat-send">Send</button>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -559,6 +487,8 @@
   let timeLeft = 0;
   let chatHistory = [];
   let currentAnalysis = null;
+  let feedbackSections = [];
+  let currentSection = 0;
 
   const recordBtn   = document.getElementById("record-btn");
   const statusText  = document.getElementById("status-text");
@@ -569,6 +499,8 @@
   const errorEl     = document.getElementById("error-msg");
   const durRow      = document.getElementById("dur-row");
   const tryAgainBtn = document.getElementById("try-again-btn");
+  const prevBtn     = document.getElementById("prev-section");
+  const nextBtn     = document.getElementById("next-section");
 
   durRow.querySelectorAll(".dur-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -582,6 +514,81 @@
   recordBtn.addEventListener("click", async () => {
     if (isRecording) { stopRecording(); } else { await startRecording(); }
   });
+
+  prevBtn.addEventListener("click", () => {
+    if (currentSection > 0) { currentSection--; renderSection(); }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentSection < feedbackSections.length - 1) { currentSection++; renderSection(); }
+  });
+
+  function parseFeedback(raw) {
+    const clean = raw
+      .replace(/\*\*/g, '')
+      .replace(/\*/g, '')
+      .replace(/^#+\s*/gm, '')
+      .replace(/^[-•]\s*/gm, '');
+
+    const lines = clean.split('\n').map(l => l.trim()).filter(l => l);
+    const sections = [];
+    let current = null;
+
+    const SECTION_KEYWORDS = /^(tips|improvements?|areas?|what (you|was)|done well|strengths?|confidence|mindset|drills?|practice|exercises?)/i;
+
+    for (const line of lines) {
+      const stripped = line.replace(/^\d+\.\s*/, '');
+      const isHeader = (stripped.endsWith(':') || SECTION_KEYWORDS.test(stripped)) && stripped.length < 60;
+
+      if (isHeader) {
+        current = { title: stripped.replace(/:$/, ''), items: [] };
+        sections.push(current);
+      } else {
+        if (!current) {
+          current = { title: 'Coaching Tips', items: [] };
+          sections.push(current);
+        }
+        if (stripped) current.items.push(stripped);
+      }
+    }
+
+    return sections.filter(s => s.items.length > 0).length
+      ? sections.filter(s => s.items.length > 0)
+      : [{ title: 'Coaching Tips', items: lines.map(l => l.replace(/^\d+\.\s*/, '')) }];
+  }
+
+  function renderSection() {
+    const sec = feedbackSections[currentSection];
+    document.getElementById('section-title').textContent = sec.title;
+    document.getElementById('section-counter').textContent = `${currentSection + 1} of ${feedbackSections.length}`;
+
+    const content = document.getElementById('section-content');
+    content.innerHTML = '';
+    sec.items.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'tip-item';
+      div.textContent = item;
+      content.appendChild(div);
+    });
+
+    prevBtn.disabled = currentSection === 0;
+    nextBtn.disabled = currentSection === feedbackSections.length - 1;
+
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentSection);
+    });
+  }
+
+  function buildDots() {
+    const dotsEl = document.getElementById('nav-dots');
+    dotsEl.innerHTML = '';
+    feedbackSections.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => { currentSection = i; renderSection(); });
+      dotsEl.appendChild(dot);
+    });
+  }
 
   async function startRecording() {
     hideError(); hideResults();
@@ -664,18 +671,10 @@
       document.getElementById("score-bar").style.width = (data.score || 0) + "%";
     }, 100);
 
-    const feedbackEl = document.getElementById("res-feedback");
-    feedbackEl.innerHTML = "";
-    const tips = (data.feedback || "").split(/\n/).filter(l => l.trim());
-    tips.forEach((tip, i) => {
-      const card = document.createElement("div");
-      card.className = "tip-card";
-      card.innerHTML = `
-        <div class="tip-num">${i + 1}</div>
-        <div class="tip-text">${tip.replace(/^\d+\.\s*/, "")}</div>
-      `;
-      feedbackEl.appendChild(card);
-    });
+    feedbackSections = parseFeedback(data.feedback || "");
+    currentSection = 0;
+    buildDots();
+    renderSection();
 
     resultsEl.style.display = "block";
     currentAnalysis = data;
@@ -687,8 +686,7 @@
   function hideResults() { resultsEl.style.display = "none"; }
 
   tryAgainBtn.addEventListener("click", () => {
-    hideResults();
-    hideError();
+    hideResults(); hideError();
     statusText.textContent = "Tap to start recording";
     chatHistory = [];
     currentAnalysis = null;
@@ -706,18 +704,13 @@
     const msg = input.value.trim();
     if (!msg || !currentAnalysis) return;
     input.value = "";
-
     appendMessage("you", msg);
 
     try {
       const res = await fetch("https://speech-learning-development-42tk.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: msg,
-          history: chatHistory,
-          analysis: currentAnalysis
-        })
+        body: JSON.stringify({ message: msg, history: chatHistory, analysis: currentAnalysis })
       });
       const data = await res.json();
       chatHistory = data.history;
