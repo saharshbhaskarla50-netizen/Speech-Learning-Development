@@ -88,6 +88,27 @@ def analyze_speech(audio_file_path, duration_seconds):
             "role": "user",
             "content": f"""You are an expert public speaking coach for students.
 
+Analyze this speech and return feedback in exactly these 4 labeled sections. Use plain text only, no markdown, no bullet dashes, no asterisks, no numbering.
+
+Tips:
+Three specific improvement tips, one per line.
+
+What You Did Well:
+Two things the speaker did well, one per line.
+
+Confidence:
+Two observations about their confidence level, one per line.
+
+Practice Drills:
+Two drills they can practice today, one per line.
+
+Transcript: '{text}'
+Word count: {word_count}
+WPM: {wpm}
+Filler words detected: {filler_count}
+
+Be encouraging but honest. Keep each point under 2 sentences."""
+
 Analyze this speech transcript and provide:
 1. Three specific improvement tips
 2. One thing they did well
