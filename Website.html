@@ -549,7 +549,7 @@
 <footer>Powered by Whisper + GPT-4o mini</footer>
 
 <script>
-  const BACKEND_URL = "https://speech-learning-development.onrender.com/analyze";
+  const BACKEND_URL = "https://speech-learning-development-42tk.onrender.com/analyze";
 
   let selectedDuration = 30;
   let mediaRecorder = null;
@@ -710,7 +710,7 @@
     appendMessage("you", msg);
 
     try {
-      const res = await fetch("https://speech-learning-development.onrender.com/chat", {
+      const res = await fetch("https://speech-learning-development-42tk.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
