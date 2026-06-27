@@ -761,13 +761,17 @@
   function parseFeedbackIntoSections(feedbackText) {
     const sections = [[], [], [], []];
     let currentSection = -1;
-    const lines = feedbackText.split(/\n/).map(l => l.trim()).filter(l => l);
+    const KEYWORDS = ["tips", "what you did well", "confidence", "practice drills"];
+    const lines = feedbackText.split(/\n/).map(l => l.trim());
     for (const line of lines) {
-      const headerIndex = CARD_HEADERS.findIndex(h => line.toLowerCase().startsWith(h.toLowerCase()));
-      if (headerIndex !== -1) {
+      const lower = line.toLowerCase();
+      const headerIndex = KEYWORDS.findIndex(k => lower.includes(k));
+      // Only treat as header if the line is short (it's a label, not a sentence)
+      if (headerIndex !== -1 && line.length < 60) {
         currentSection = headerIndex;
-      } else if (currentSection !== -1 && line) {
-        sections[currentSection].push(line.replace(/^\d+\.\s*/, ""));
+      } else if (currentSection !== -1 && line.length > 0) {
+        const clean = line.replace(/^[\d\-\*\•]+[\.\)]\s*/, "").replace(/^\-\s*/, "").trim();
+        if (clean) sections[currentSection].push(clean);
       }
     }
     return sections;
