@@ -167,3 +167,27 @@ personalized coaching advice. Be encouraging and specific."""
     })
 
     return ai_message, conversation_history
+
+if __name__ == "__main__":
+    # ---- TEST EVERYTHING ----
+    result = analyze_speech("test.mp3", 60)
+    print(result)
+
+    print("\n---- AI COACH CONVERSATION ----")
+    conversation_history = []
+
+    questions = [
+        "How can I reduce my filler words?",
+        "What exercises can I do to speak slower?",
+        "How long until I see improvement?"
+    ]
+
+    for question in questions:
+        print(f"\nYou: {question}")
+        response, conversation_history = chat_with_coach(
+            result['transcript'],
+            result,
+            conversation_history,
+            question
+        )
+        print(f"Coach: {response}")
