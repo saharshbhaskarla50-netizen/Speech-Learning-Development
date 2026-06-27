@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Speach Learning Development — AI Speech Coach</title>
+  <title>Speech Learning Development — AI Speech Coach</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
@@ -297,7 +297,6 @@
       color: var(--text);
     }
 
-    /* ── Tip cards (replaces old .feedback-tips p) ── */
     .tip-card {
       display: flex;
       align-items: flex-start;
@@ -370,6 +369,95 @@
       font-size: 12px;
       color: var(--muted);
     }
+
+    #chat-section {
+      display: none;
+      margin-top: 28px;
+    }
+
+    #chat-messages {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      height: 280px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .chat-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 85%;
+    }
+
+    .chat-row.user { align-self: flex-end; }
+    .chat-row.coach { align-self: flex-start; }
+
+    .chat-bubble {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .chat-row.user .chat-bubble {
+      background: rgba(124,92,252,0.15);
+      border: 1px solid rgba(124,92,252,0.3);
+      color: var(--text);
+    }
+
+    .chat-row.coach .chat-bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .chat-sender {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    #chat-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #chat-input:focus { border-color: var(--accent); }
+
+    #chat-send {
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    #chat-send:hover { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -445,6 +533,16 @@
     </div>
 
     <button class="try-again-btn" id="try-again-btn">Record another →</button>
+
+    <div id="chat-section">
+      <div class="section-label" style="margin-top: 28px;">Chat with your Coach</div>
+      <div id="chat-messages"></div>
+      <div class="chat-input-row">
+        <input id="chat-input" type="text" placeholder="Ask your coach something…" />
+        <button id="chat-send">Send</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -459,6 +557,8 @@
   let isRecording = false;
   let timerInterval = null;
   let timeLeft = 0;
+  let chatHistory = [];
+  let currentAnalysis = null;
 
   const recordBtn   = document.getElementById("record-btn");
   const statusText  = document.getElementById("status-text");
@@ -549,7 +649,7 @@
       showResults(data);
     } catch (err) {
       loadingEl.style.display = "none";
-      showError(`Couldn't reach the backend. Make sure Flask is running on port 5000. (${err.message})`);
+      showError(`Couldn't reach the backend. (${err.message})`);
       statusText.textContent = "Tap to start recording";
     }
   }
@@ -578,11 +678,70 @@
     });
 
     resultsEl.style.display = "block";
+    currentAnalysis = data;
+    chatHistory = [];
+    document.getElementById("chat-messages").innerHTML = "";
+    document.getElementById("chat-section").style.display = "block";
   }
 
   function hideResults() { resultsEl.style.display = "none"; }
 
-  tryAgainBtn.addEventListener("click", () => { hideResults(); hideError(); statusText.textContent = "Tap to start recording"; });
+  tryAgainBtn.addEventListener("click", () => {
+    hideResults();
+    hideError();
+    statusText.textContent = "Tap to start recording";
+    chatHistory = [];
+    currentAnalysis = null;
+    document.getElementById("chat-section").style.display = "none";
+    document.getElementById("chat-messages").innerHTML = "";
+  });
+
+  document.getElementById("chat-send").addEventListener("click", sendChatMessage);
+  document.getElementById("chat-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") sendChatMessage();
+  });
+
+  async function sendChatMessage() {
+    const input = document.getElementById("chat-input");
+    const msg = input.value.trim();
+    if (!msg || !currentAnalysis) return;
+    input.value = "";
+
+    appendMessage("you", msg);
+
+    try {
+      const res = await fetch("https://speech-learning-development-42tk.onrender.com/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: msg,
+          history: chatHistory,
+          analysis: currentAnalysis
+        })
+      });
+      const data = await res.json();
+      chatHistory = data.history;
+      appendMessage("coach", data.response);
+    } catch (err) {
+      appendMessage("coach", "Couldn't reach the coach right now. Try again.");
+    }
+  }
+
+  function appendMessage(sender, text) {
+    const box = document.getElementById("chat-messages");
+    const row = document.createElement("div");
+    row.className = `chat-row ${sender === "you" ? "user" : "coach"}`;
+    const label = document.createElement("div");
+    label.className = "chat-sender";
+    label.textContent = sender === "you" ? "You" : "Coach";
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble";
+    bubble.textContent = text;
+    row.appendChild(label);
+    row.appendChild(bubble);
+    box.appendChild(row);
+    box.scrollTop = box.scrollHeight;
+  }
 
   function showError(msg) { errorEl.textContent = msg; errorEl.style.display = "block"; }
   function hideError() { errorEl.style.display = "none"; }
