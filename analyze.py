@@ -108,19 +108,6 @@ WPM: {wpm}
 Filler words detected: {filler_count}
 
 Be encouraging but honest. Keep each point under 2 sentences."""
-
-Analyze this speech transcript and provide:
-1. Three specific improvement tips
-2. One thing they did well
-3. A confidence rating out of 10
-4. One drill they can practice today
-
-Transcript: '{text}'
-Word count: {word_count}
-WPM: {wpm}
-Filler words detected: {filler_count}
-
-Be encouraging but honest. Keep each tip under 2 sentences."""
         }]
     )
 
