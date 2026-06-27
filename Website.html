@@ -297,6 +297,85 @@
       color: var(--text);
     }
 
+    /* Flashcard styles */
+    .flashcard-wrapper {
+      position: relative;
+    }
+
+    .flashcard-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .flashcard-nav-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent2);
+    }
+
+    .flashcard-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .flashcard-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.2s;
+    }
+
+    .flashcard-dot.active { background: var(--accent2); }
+
+    .flashcard-arrows {
+      display: flex;
+      gap: 8px;
+    }
+
+    .arrow-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .arrow-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+
+    .arrow-btn:disabled { opacity: 0.25; cursor: default; }
+
+    .flashcard {
+      display: none;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      min-height: 160px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .flashcard.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(8px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
     .tip-card {
       display: flex;
       align-items: flex-start;
@@ -529,7 +608,27 @@
 
     <div class="result-block">
       <div class="result-block-title">Coaching Tips</div>
-      <div id="res-feedback"></div>
+      <div class="flashcard-wrapper">
+        <div class="flashcard-nav">
+          <div>
+            <div class="flashcard-nav-title" id="flashcard-title">Tips</div>
+            <div class="flashcard-dots">
+              <div class="flashcard-dot active" data-index="0"></div>
+              <div class="flashcard-dot" data-index="1"></div>
+              <div class="flashcard-dot" data-index="2"></div>
+              <div class="flashcard-dot" data-index="3"></div>
+            </div>
+          </div>
+          <div class="flashcard-arrows">
+            <button class="arrow-btn" id="prev-card" disabled>←</button>
+            <button class="arrow-btn" id="next-card">→</button>
+          </div>
+        </div>
+        <div class="flashcard active" id="card-0"></div>
+        <div class="flashcard" id="card-1"></div>
+        <div class="flashcard" id="card-2"></div>
+        <div class="flashcard" id="card-3"></div>
+      </div>
     </div>
 
     <button class="try-again-btn" id="try-again-btn">Record another →</button>
@@ -654,6 +753,60 @@
     }
   }
 
+  // Flashcard state
+  let currentCard = 0;
+  const CARD_TITLES = ["Tips", "What You Did Well", "Confidence", "Practice Drills"];
+  const CARD_HEADERS = ["Tips:", "What You Did Well:", "Confidence:", "Practice Drills:"];
+
+  function parseFeedbackIntoSections(feedbackText) {
+    const sections = [[], [], [], []];
+    let currentSection = -1;
+    const lines = feedbackText.split(/\n/).map(l => l.trim()).filter(l => l);
+    for (const line of lines) {
+      const headerIndex = CARD_HEADERS.findIndex(h => line.toLowerCase().startsWith(h.toLowerCase()));
+      if (headerIndex !== -1) {
+        currentSection = headerIndex;
+      } else if (currentSection !== -1 && line) {
+        sections[currentSection].push(line.replace(/^\d+\.\s*/, ""));
+      }
+    }
+    return sections;
+  }
+
+  function renderFlashcard(index, items) {
+    const card = document.getElementById(`card-${index}`);
+    card.innerHTML = "";
+    if (!items.length) {
+      card.innerHTML = `<div class="tip-text" style="color:var(--muted)">No data available.</div>`;
+      return;
+    }
+    items.forEach((item, i) => {
+      const el = document.createElement("div");
+      el.className = "tip-card";
+      el.innerHTML = `<div class="tip-num">${i + 1}</div><div class="tip-text">${item}</div>`;
+      card.appendChild(el);
+    });
+  }
+
+  function goToCard(index) {
+    document.getElementById(`card-${currentCard}`).classList.remove("active");
+    document.querySelectorAll(".flashcard-dot").forEach(d => d.classList.remove("active"));
+    currentCard = index;
+    document.getElementById(`card-${currentCard}`).classList.add("active");
+    document.querySelector(`.flashcard-dot[data-index="${currentCard}"]`).classList.add("active");
+    document.getElementById("flashcard-title").textContent = CARD_TITLES[currentCard];
+    document.getElementById("prev-card").disabled = currentCard === 0;
+    document.getElementById("next-card").disabled = currentCard === 3;
+  }
+
+  document.getElementById("prev-card").addEventListener("click", () => {
+    if (currentCard > 0) goToCard(currentCard - 1);
+  });
+
+  document.getElementById("next-card").addEventListener("click", () => {
+    if (currentCard < 3) goToCard(currentCard + 1);
+  });
+
   function showResults(data) {
     document.getElementById("res-score").textContent   = data.score ?? "—";
     document.getElementById("res-wpm").textContent     = data.wpm   ?? "—";
@@ -664,18 +817,9 @@
       document.getElementById("score-bar").style.width = (data.score || 0) + "%";
     }, 100);
 
-    const feedbackEl = document.getElementById("res-feedback");
-    feedbackEl.innerHTML = "";
-    const tips = (data.feedback || "").split(/\n/).filter(l => l.trim());
-    tips.forEach((tip, i) => {
-      const card = document.createElement("div");
-      card.className = "tip-card";
-      card.innerHTML = `
-        <div class="tip-num">${i + 1}</div>
-        <div class="tip-text">${tip.replace(/^\d+\.\s*/, "")}</div>
-      `;
-      feedbackEl.appendChild(card);
-    });
+    const sections = parseFeedbackIntoSections(data.feedback || "");
+    sections.forEach((items, i) => renderFlashcard(i, items));
+    goToCard(0);
 
     resultsEl.style.display = "block";
     currentAnalysis = data;
