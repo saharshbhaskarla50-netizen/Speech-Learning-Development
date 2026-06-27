@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -298,13 +297,41 @@
       color: var(--text);
     }
 
-    .feedback-tips p {
-      padding: 10px 14px;
-      border-left: 2px solid var(--accent);
-      margin-bottom: 8px;
+    /* ── Tip cards (replaces old .feedback-tips p) ── */
+    .tip-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+      transition: border-color 0.15s;
+    }
+
+    .tip-card:hover { border-color: var(--accent); }
+
+    .tip-num {
+      min-width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .tip-text {
       font-size: 14px;
-      background: rgba(124, 92, 252, 0.06);
-      border-radius: 0 8px 8px 0;
+      line-height: 1.65;
+      color: var(--text);
+      padding-top: 3px;
     }
 
     .try-again-btn {
@@ -412,7 +439,7 @@
       <p id="res-transcript"></p>
     </div>
 
-    <div class="result-block feedback-tips">
+    <div class="result-block">
       <div class="result-block-title">Coaching Tips</div>
       <div id="res-feedback"></div>
     </div>
@@ -540,10 +567,14 @@
     const feedbackEl = document.getElementById("res-feedback");
     feedbackEl.innerHTML = "";
     const tips = (data.feedback || "").split(/\n/).filter(l => l.trim());
-    tips.forEach(tip => {
-      const p = document.createElement("p");
-      p.textContent = tip.replace(/^\d+\.\s*/, "");
-      feedbackEl.appendChild(p);
+    tips.forEach((tip, i) => {
+      const card = document.createElement("div");
+      card.className = "tip-card";
+      card.innerHTML = `
+        <div class="tip-num">${i + 1}</div>
+        <div class="tip-text">${tip.replace(/^\d+\.\s*/, "")}</div>
+      `;
+      feedbackEl.appendChild(card);
     });
 
     resultsEl.style.display = "block";
@@ -558,4 +589,3 @@
 </script>
 </body>
 </html>
-
